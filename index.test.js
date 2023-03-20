@@ -1,5 +1,3 @@
-
-
 const {solve, range, emptySquares, setValueAt} = require("./index")
 
 describe("Solve", () => {
