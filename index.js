@@ -41,10 +41,8 @@ function setValueAt(grid, [row, col], value) {
 
 function* allowedValues(grid, square) {
     const [row, col] = square
-    const functions = [() => rowValues(grid, row),
-                       () => colValues(grid, col),
-                       () => boxValues(grid, boxContaining(square))]
-    const blockedValues = new Set(functions.flatMap(f => f()))
+    const blockedValues = new Set(rowValues(grid, row)
+        .concat(colValues(grid, col), boxValues(grid, boxContaining(square))))
     for (const v of permittedValues.filter(n => !blockedValues.has(n)))
         yield v
 }
