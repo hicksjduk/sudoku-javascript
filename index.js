@@ -45,7 +45,7 @@ function* allowedValues(grid, square) {
                        () => colValues(grid, col),
                        () => boxValues(grid, boxContaining(square))]
     const blockedValues = new Set(functions.flatMap(f => f()))
-    for (v of permittedValues.filter(n => !blockedValues.has(n)))
+    for (const v of permittedValues.filter(n => !blockedValues.has(n)))
         yield v
 }
 
