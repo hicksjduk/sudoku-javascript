@@ -19,7 +19,7 @@ describe("Solve", () => {
     })
     test("Not solvable", () => {
         const {done} = solve(setValueAt(puzzle, [8,8], 3)).next()
-        expect(done).toBeTrue
+        expect(done).toBe(true)
     })
 })
 
@@ -56,13 +56,13 @@ const puzzle = [
 describe("emptySquares", () => {
     test("Find first", () => {
         const {done, value} = emptySquares(puzzle).next()
-        expect(done).toBeTrue
-        expect(value).toBeUndefined
+        expect(done).toBe(false)
+        expect(value).toStrictEqual([0,1])
     })
     test("No empties", () => {
         const fullPuzzle = range(1, 9).map(x => range(1, 9).map(y => 1))
         const {done, value} = emptySquares(fullPuzzle).next()
-        expect(done).toBeTrue
-        expect(value).toBeUndefined
+        expect(done).toBe(true)
+        expect(value).toBeUndefined()
     })
 })
