@@ -25,19 +25,19 @@ describe("Solve", () => {
 
 describe("Range", () => {
     test("Ascending", () => {
-        expect([...range(1,10,2)]).toStrictEqual([1,3,5,7,9])
+        expect(range(1,10,2)).toStrictEqual([1,3,5,7,9])
     })
 
     test("Ascending, first > second", () => {
-        expect([...range(10,1,2)]).toStrictEqual([])
+        expect(range(10,1,2)).toStrictEqual([])
     })
 
     test("Descending", () => {
-        expect([...range(1,-10,-2)]).toStrictEqual([1,-1,-3,-5,-7,-9])
+        expect(range(1,-10,-2)).toStrictEqual([1,-1,-3,-5,-7,-9])
     })
 
     test("Descending, first < second", () => {
-        expect([...range(1,10,-2)]).toStrictEqual([])
+        expect(range(1,10,-2)).toStrictEqual([])
     })
 })
 
@@ -60,7 +60,7 @@ describe("emptySquares", () => {
         expect(value).toBeUndefined
     })
     test("No empties", () => {
-        const fullPuzzle = [...range(1, 9)].map(x => [...range(1, 9)].map(y => 1))
+        const fullPuzzle = range(1, 9).map(x => range(1, 9).map(y => 1))
         const {done, value} = emptySquares(fullPuzzle).next()
         expect(done).toBeTrue
         expect(value).toBeUndefined

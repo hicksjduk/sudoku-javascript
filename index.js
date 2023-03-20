@@ -12,11 +12,13 @@ function* solve(grid)
         yield* solveAt(grid, square)
 }
 
-function* range(first, last, step=1)
+function range(first, last, step=1)
 {
     const test = step < 0 ? i => i >= last : i => i <= last
+    const answer = []
     for (let n = first; test(n); n += step)
-        yield n
+        answer.push(n)
+    return answer
 }
 
 function* emptySquares(grid)
@@ -63,14 +65,14 @@ function boxValues(grid, [[topRow, leftCol], [bottomRow, rightCol]]) {
 
 function calcBoxSize() {
     const squareRoot = Math.sqrt(gridSize)
-    const cols = [...range(Math.ceil(squareRoot), gridSize)].find(n => gridSize % n == 0)
+    const cols = range(Math.ceil(squareRoot), gridSize).find(n => gridSize % n == 0)
     return [gridSize / cols, cols]
 }
 
 function calcBoxes() {
     const [boxRows, boxCols] = calcBoxSize()
-    const boxTopCorners = [...range(0, gridSize - 1, boxRows)].flatMap(row => 
-        [...range(0, gridSize - 1, boxCols)].map(col => [row, col])
+    const boxTopCorners = range(0, gridSize - 1, boxRows).flatMap(row => 
+        range(0, gridSize - 1, boxCols).map(col => [row, col])
     )
     return boxTopCorners.map(([topRow, leftCol]) => 
         [[topRow, leftCol], [topRow + boxRows - 1, leftCol + boxCols -1]]
