@@ -12,15 +12,6 @@ function* solve(grid)
         yield* solveAt(grid, square)
 }
 
-function range(first, last, step=1)
-{
-    const test = step < 0 ? i => i >= last : i => i <= last
-    const answer = []
-    for (let n = first; test(n); n += step)
-        answer.push(n)
-    return answer
-}
-
 function* emptySquares(grid)
 {
     for (let row = 0; row < grid.length; row++) 
@@ -35,8 +26,12 @@ function* solveAt(grid, square) {
 }
 
 function setValueAt(grid, [row, col], value) {
-    const newRow = grid[row].map((v, i) => i == col ? value : v)
-    return grid.map((r, i) => i == row ? newRow : r)
+    const newRow = replaceValueAt(grid[row], col, value)
+    return replaceValueAt(grid, row, newRow)
+}
+
+function replaceValueAt(arr, index, value) {
+    return arr.map((v, i) => i == index ? value : v)
 }
 
 function* allowedValues(grid, square) {
@@ -81,6 +76,15 @@ function boxContaining([row, col]) {
     return boxes.find(([[topRow, leftCol], [bottomRow, rightCol]]) =>
         topRow <= row && bottomRow >= row && leftCol <= col && rightCol >= col
     )
+}
+
+function range(first, last, step=1)
+{
+    const test = step < 0 ? i => i >= last : i => i <= last
+    const answer = []
+    for (let n = first; test(n); n += step)
+        answer.push(n)
+    return answer
 }
 
 module.exports = {solve, range, emptySquares, setValueAt}
