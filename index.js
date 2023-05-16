@@ -3,13 +3,50 @@ const emptySquare = 0
 const gridSize = permittedValues.length
 const boxes = calcBoxes()
 
+if (gridSize == 0)
+    throw "Permitted values is empty"
+if (permittedValues.includes(emptySquare))
+    throw "Permitted values contains the empty square value"
+if (hasDuplicates(permittedValues))
+    throw ("Permitted values contains duplicates")
+
 function* solve(grid)
+{
+    validate(grid)
+    yield* solveValid(grid)
+}
+
+function* solveValid(grid)
 {
     const {done, value:square} = emptySquares(grid).next()
     if (done)
         yield grid
     else
         yield* solveAt(grid, square)
+}
+
+function validate(grid) {
+    if (grid.length != gridSize)
+        throw "Wrong number of rows"
+    grid.forEach(row => {
+        if (row.length != gridSize)
+            throw "Wrong number of columns"
+        const values = row.filter(notEmpty)
+        if (!values.every(n => permittedValues.includes(n)))
+            throw "Invalid value"
+        if (hasDuplicates(values))
+            throw "Row contains duplicate values"
+    })
+    for (let i = 0; i < gridSize; i++) 
+        if (hasDuplicates(colValues(grid, i)))
+            throw "Column contains duplicate values"
+    for (const b of boxes)
+        if (hasDuplicates(boxValues(grid, b)))
+            throw "Box contains duplicate values"
+}
+
+function hasDuplicates(arr) {
+    return arr.length != new Set(arr).size
 }
 
 function* emptySquares(grid)
@@ -22,7 +59,7 @@ function* emptySquares(grid)
 
 function* solveAt(grid, square) {
     for (const value of allowedValues(grid, square))
-        yield* solve(setValueAt(grid, square, value))
+        yield* solveValid(setValueAt(grid, square, value))
 }
 
 function setValueAt(grid, [row, col], value) {
@@ -43,18 +80,22 @@ function* allowedValues(grid, square) {
 }
 
 function rowValues(grid, row) {
-    return grid[row].filter(n => n != emptySquare)
+    return grid[row].filter(notEmpty)
 }
 
 function colValues(grid, col) {
-    return grid.map(row => row[col]).filter(n => n != emptySquare)
+    return grid.map(row => row[col]).filter(notEmpty)
 }
 
 function boxValues(grid, [[topRow, leftCol], [bottomRow, rightCol]]) {
     return grid.slice(topRow, bottomRow + 1)
         .flatMap(r => r.slice(leftCol, rightCol + 1))
-        .filter(n => n != emptySquare)
+        .filter(notEmpty)
 } 
+
+function notEmpty(n) {
+    return n != emptySquare
+}
 
 function calcBoxSize() {
     const squareRoot = Math.sqrt(gridSize)
